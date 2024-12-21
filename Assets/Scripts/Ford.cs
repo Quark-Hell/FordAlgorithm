@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class Ford
 {
-    public GameObject infoText;
+    public Notification noti;
 
     public void StartAlghorithm(int verticesCount, List<Edge> edges, int startVertex, List<Node> nodes)
     {
-        TextMeshProUGUI text = infoText.GetComponent<TextMeshProUGUI>();
-        text.text = "";
         int[] distances = new int[verticesCount];
    
         for (int i = 0; i < verticesCount; i++)
@@ -37,7 +35,7 @@ public class Ford
         {
             if (distances[edge.StartPoint.Pos] != int.MaxValue && distances[edge.StartPoint.Pos] + edge.Weight < distances[edge.EndPoint.Pos])
             {
-                text.text = "Граф содержит отрицательный цикл.";
+                noti.Show("Граф содержит отрицательный цикл.");
                 break;
             }
         }

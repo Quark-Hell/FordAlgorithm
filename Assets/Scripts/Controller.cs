@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -28,13 +29,18 @@ public class Controller : MonoBehaviour,
     private Data data = new();
 
     [SerializeField]
-    private GameObject infoText;
+    private Notification notification;
 
     void Start()
     {
-        data.graph.ford.infoText = infoText;
+        data.graph.ford.noti = notification;
         data.selectedNode[0] = null;
         data.selectedNode[1] = null;
+
+        data.graph.sprite = vertexSprite;
+        data.graph.rectParent = transform;
+        data.graph.arrow = arrowSprite;
+        data.graph.edgeMat = edgeMaterial;
     }
 
     private void Update()
@@ -57,8 +63,52 @@ public class Controller : MonoBehaviour,
     }
     public void Save()
     {
-        ScreenCapture.CaptureScreenshot("screenshot.png");
+        string path = "Saves";
+        string screenName = GetUniqueScreenshotName(path, "screenshot_", "png");
+        string saveName = GetUniqueScreenshotName(path, "save_", "json");
+
+        string fullPathScreenshot = Path.Combine(path, screenName);
+        string fullPathSave = Path.Combine(path, saveName);
+
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        TakeScreenshot(fullPathScreenshot);
+        data.graph.Serialize(fullPathSave);
+    }
+
+    private void TakeScreenshot(string path)
+    {
+        ScreenCapture.CaptureScreenshot(path);
         Debug.Log("A screenshot was taken!");
+        notification.Show("Данные сохранены");
+    }
+
+    string GetUniqueScreenshotName(string path, string name, string extension)
+    {
+        int counter = 0;
+        string fileName;
+        string fullPath;
+
+        do
+        {
+            fileName = $"{name}{counter}.{extension}";
+            fullPath = Path.Combine(path, fileName);
+            counter++;
+        }
+        while (File.Exists(fullPath));
+
+        return fileName;
+    }
+
+    public void Load(string path)
+    {
+        data.selectedObject = null;
+        data.selectedNode[0] = null;
+        data.selectedNode[1] = null;
+        data.graph.Deserialize(path);
     }
 
     private GameObject startObject = null;
@@ -184,7 +234,7 @@ public class Controller : MonoBehaviour,
     {
         Vector2 pos = mousePos;
         pos.y += 100;
-        data.graph.AddNode(pos, vertexSprite, transform);
+        data.graph.AddNode(pos);
     }
 
 

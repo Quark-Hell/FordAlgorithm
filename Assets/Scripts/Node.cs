@@ -13,6 +13,24 @@ public class Node : MonoBehaviour
 
     private GameObject textContainer;
 
+    public void Configurate()
+    {
+        transform.tag = "Vertex";
+        transform.name = "Node";
+
+        textContainer = new GameObject();
+        textContainer.transform.SetParent(transform, false);
+
+        Text = textContainer.AddComponent<TextMeshPro>();
+        RectTransform rectTransform = textContainer.GetComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(1, 1);
+
+        Text.fontSize = 4;
+        Text.color = new Color(255, 255, 255);
+        Text.alignment = TextAlignmentOptions.Center;
+        Text.verticalAlignment = VerticalAlignmentOptions.Middle;
+    }
+
     public void SetImage(Sprite sprite)
     {
         Image img = transform.gameObject.AddComponent<Image>();
@@ -26,7 +44,7 @@ public class Node : MonoBehaviour
     public void SetPosition(Vector2 position)
     {
         RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = position;
+        rectTransform.anchoredPosition3D = new Vector3(position.x, position.y, -10);
     }
 
     public void AddEdge(Node start, Node end, Sprite arrow, Material mat)
@@ -68,19 +86,6 @@ public class Node : MonoBehaviour
 
     void Start()
     {
-        transform.tag = "Vertex";
-        transform.name = "Node";
 
-        textContainer = new GameObject();
-        textContainer.transform.SetParent(transform, false);
-
-        Text = textContainer.AddComponent<TextMeshPro>();
-        RectTransform rectTransform = textContainer.GetComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(1,1);
-
-        Text.fontSize = 4;
-        Text.color = new Color(255, 255, 255);
-        Text.alignment = TextAlignmentOptions.Center;
-        Text.verticalAlignment = VerticalAlignmentOptions.Middle;
     }
 }

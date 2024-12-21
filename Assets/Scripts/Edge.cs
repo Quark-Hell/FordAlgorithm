@@ -10,7 +10,7 @@ public class Edge : MonoBehaviour, IScrollHandler
 {
     public Node StartPoint { get; private set; }
     public Node EndPoint { get; private set; }
-    public int Weight { get; private set; }
+    public int Weight;
 
     private LineRenderer lineRenderer = null;
     private GameObject textContainer = null;
@@ -22,6 +22,9 @@ public class Edge : MonoBehaviour, IScrollHandler
     {
         StartPoint = startPoint;
         EndPoint = endPoint;
+
+        Vector3 pos = transform.position;
+        transform.position = new Vector3(pos.x, pos.y, -10);
 
         lineRenderer = this.AddComponent<LineRenderer>();
 
@@ -114,7 +117,7 @@ public class Edge : MonoBehaviour, IScrollHandler
         textContainer.transform.rotation = targetRotation;
         textMeshPro.transform.rotation = targetRotation;
 
-        textContainer.transform.position = targetPosition;
+        textContainer.transform.position = new Vector3(targetPosition.x, targetPosition.y, 85);
     }
 
 
